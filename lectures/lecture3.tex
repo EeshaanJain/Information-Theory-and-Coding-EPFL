@@ -92,24 +92,33 @@ We show the Huffman procedure on the following code: $\Ucal = \{a,b,\dots,f\}$ a
 [every node/.style={minimum height=2em}]
 \matrix [matrix of math nodes](Mat)
 {
-x_i  &|[minimum width=2em]|& P(x_i) &|[minimum width=4em]| Code &       &|[minimum width=4em]|      &       &|[minimum width=4em]|  &   &|[minimum width=4em]|  &   &\\
-a &&0.25     &        & 0.25  &   &0.25   &   &0.45&  &0.55&\\
-b && 0.2    &        & 0.2  &   &0.2   &   &0.30&  &0.45&\\
-c && 0.15   &     & 0.15  &   &0.3   &   &0.25&  &   &\\
-d && 0.15    &        &0.15   &   &0.25   &   &   &   &   &\\
-e && 0.15    &        &0.25   &   &       &   &   &   &   &\\
-f && 0.1    &        &   &   &       &   &   &   &   &\\
+x_i  &|[minimum width=2em]|& P(x_i) &|[minimum width=4em]| Code &       &|[minimum width=4em]|      &       &|[minimum width=4em]|  &   &|[minimum width=4em]|  &   &|[minimum width=4em]| &  &\\
+a &&0.25     &        & 0.25  &   &0.25   &   &0.25&  &{\color{magenta}0.55}& & {\color{magenta}1}\\
+b && 0.2    &        & 0.2  &   &0.2   &   &0.30&  &0.45& &\\
+c && 0.15   &     & 0.15  &   &{\color{magenta}0.3}   &   &{\color{magenta} 0.45}&  &   & &\\
+d && 0.15    &        &0.15   &   &0.25   &   &   &   &   & &\\
+e && 0.15    &        &{\color{magenta}0.25}   &   &       &   &   &   &   & &\\
+f && 0.1    &        &   &   &       &   &   &   &   & &\\
 };
 
 %\draw (Mat-2-3.east) -- (Mat-2-3-|Mat-2-5.west)node[above,midway]{00};
 %\draw(Mat-5-3.east) --++(1em,0) -- (Mat-6-5.west)node[above,pos=0.2]{101};
-\draw (Mat-6-3.east)-|node[above,pos=0.4]{1000}++(2em,-1em) coordinate(aa) --++(1em,0) |- (Mat-6-5.west);
-\draw (Mat-7-3.east)-|node[below,pos=0.4]{1001} (aa);
-\draw (Mat-4-5.east)-|node[above,pos=0.4]{1000}++(2em,-1em) coordinate(aa) --++(1em,0) |- (Mat-4-7.west);
-\draw (Mat-5-5.east)-|node[below,pos=0.4]{1001} (aa);
-\draw (Mat-3-7.east)-|node[above,pos=0.4]{1000}++(2em,-1em) coordinate(aa) --++(1em,0) |- (Mat-2-9.west);
-\draw (Mat-5-7.east)-|node[below,pos=0.4]{1001} (aa);
-\draw (Mat-3-7.east)-|node[above,pos=0.4]{1000}++(2em,-1em) coordinate(aa) --++(1em,0) |- (Mat-2-9.west);
-\draw (Mat-5-7.east)-|node[below,pos=0.4]{1001} (aa);
+\draw (Mat-6-3.east)-|node[above,pos=0.4]{\color{ForestGreen}110}++(2em,-1em) coordinate(aa) --++(1em,0) |- (Mat-6-5.west);
+\draw (Mat-7-3.east)-|node[below,pos=0.4]{\color{ForestGreen}111} (aa);
+\draw (Mat-4-5.east)-|node[above,pos=0.4]{\color{ForestGreen}010}++(2em,-1em) coordinate(aa) --++(1em,0) |- (Mat-4-7.west);
+\draw (Mat-5-5.east)-|node[below,pos=0.4]{\color{ForestGreen}011} (aa);
+\draw (Mat-3-7.east)-|node[above,pos=0.4]{\color{ForestGreen}10}++(2em,-1em) coordinate(aa) --++(1em,0) |- (Mat-4-9.west);
+\draw (Mat-5-7.east)-|node[below,pos=0.4]{11} (aa);
+\draw (Mat-2-9.east)-|node[above,pos=0.4]{\color{ForestGreen} 00}++(2em,-1em) coordinate(aa) --++(1em,0) |- (Mat-2-11.west);
+\draw (Mat-3-9.east)-|node[below,pos=0.4]{01} (aa);
+\draw (Mat-2-11.east)-|node[above,pos=0.4]{0}++(2em,-1em) coordinate(aa) --++(1em,0) |- (Mat-2-13.west);
+\draw (Mat-3-11.east)-|node[below,pos=0.4]{1} (aa);
 \end{tikzpicture}
+
+Following the procedure, we get the codes (marked in green for the corresponding letter in the alphabet). The nodes marked in magenta are the fake nodes, and can be used to calculate the expected length of the code. 
+The expected length of the code is given by
+\[
+\EE[\ell(u)] = \sum \text{(fake node values)} = 0.25 + 0.3 + 0.45 + 0.55 + 1 = 2.55
+\]
+
 \end{eg}
