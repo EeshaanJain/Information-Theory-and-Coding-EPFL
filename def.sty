@@ -1,0 +1,143 @@
+
+\newcommand{\Pnet}{F_{\theta}}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\newcommand{\etal}{\emph{et al.}}
+\newcommand{\sqc}[1]{s_{#1} (G_c\,|\,G_q)}
+\newcommand{\dqc}[1]{d_{#1} (G_c\,|\,G_q)}
+\newcommand{\Cb}{\bm{C}}
+\DeclareMathOperator{\mini}{\mathrm{minimize}}
+\newcommand{\given}{\,|\,}
+ \newcommand{\gnn}{\mathrm{GNN}}
+\newcommand{\viz}{\emph{viz.}}
+\newcommand{\query}{\mathrm{Query}}
+\newcommand{\key}{\mathrm{Key}}
+\newcommand{\val}{\mathrm{Value}}
+\newcommand{\att}{\mathrm{Att}}
+\newcommand{\loss}{\Lambda}
+\newcommand{\zetab}{\bm{\zeta}}
+\newcommand{\Db}{\bm{D}}
+ \newcommand{\inner}[1]{\left\langle #1 \right\rangle}
+\DeclareMathOperator{\mlp}{\textsc{MLP}}
+\DeclareMathOperator{\for}{\textsc{FOR}}
+\DeclareMathOperator{\ff}{\textsc{FF}}
+\DeclareMathOperator{\aggregate}{\textsc{Aggr}}
+\DeclareMathOperator{\combine}{\textsc{Comb}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\new}[1]{{\color{blue}#1}}
+\newcommand{\ir}[1]{{\color{green}#1}}
+
+% \usepackage{amssymb}
+\usepackage{bm}
+\usepackage[mathscr]{eucal}
+\usepackage{mathrsfs}
+\usepackage{url}
+\usepackage{xcolor}
+\definecolor{xc1}{RGB}{255,0,0}
+\definecolor{xc2}{RGB}{0,255,0}
+\definecolor{xc3}{RGB}{0,0,255}
+\newcommand{\nn}{\nonumber}
+\ifx\theorem\undefined
+\newtheorem{theorem}{Theorem}
+\newtheorem{example}{Example}
+\newtheorem{property}{Property}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\fi
+% Theorem-like envs with number forced from outside.
+\newtheorem{numthm}{Theorem}
+\newenvironment{numtheorem}[1]{%
+  \renewcommand\thenumthm{#1}\numthm}{\endnumthm}
+\newtheorem{numlem}{Lemma}
+\newenvironment{numlemma}[1]{%
+  \renewcommand\thenumlem{#1}\numlem}{\endnumlem}
+\newtheorem{numprop}{Proposition}
+\newenvironment{numproposition}[1]{%
+  \renewcommand\thenumprop{#1}\numprop}{\endnumprop}
+\newcommand{\thetab}{\theta}
+\newcommand{\hb}{\bm{h}}
+\newcommand{\Mb}{\bm{M}}
+
+\newcommand{\Hb}{{\bm{H}}}
+\newcommand{\Pb}{{\bm{P}}}
+\newcommand{\kron}{\otimes}
+\newcommand{\Kron}{\bigotimes}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Area}{\omega_r}
+\newcommand{\yb}{\bm{y}}
+\newcommand{\Acal}{\mathcal{A}}
+\newcommand{\Ccal}{\mathcal{C}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\pb}{\bm{p}}
+\newcommand{\fb}{\bm{f}}
+\newcommand{\Rb}{\bm{R}}
+\newcommand{\Eb}{\bm{E}}
+\newcommand{\Wb}{\bm{W}}
+\newcommand{\Lb}{\bm{L}}
+\newcommand{\Sb}{\bm{S}}
+\newcommand{\Xcal}{\mathcal{X}}
+\newcommand{\Gcal}{\mathcal{G}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\Ical}{\mathcal{I}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\Tcal}{\mathcal{T}}
+\newcommand{\tb}{\bm{t}}
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\xb}{\bm{x}}
+\newcommand{\db}{\bm{d}}
+\newcommand{\qb}{\bm{q}}
+\newcommand{\zb}{\bm{z}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Ycal}{\mathcal{Y}}
+\newcommand{\alphab}{\pmb{\alpha}}
+\def\RR{\mathbb{R}}
+\def\EE{\mathbb{E}}
+\def\ZZ{\mathbb{Z}}
+\def\NN{\mathbb{N}}
+\def\PP{\Pr}
+\newcommand{\dum}{\$}
+%\newcommand{\xhdr}[1]{\vspace{1mm}\noindent{{\bf #1.}}}
+% \newcommand{\xhdr}[1]{\vspace{1mm}\noindent{{\bf #1.}}}
+\newcommand{\nbr}{\text{nbr}}
+\newcommand{\nnbr}{\text{nnbr}}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Qr}{Q}
+\newcommand{\Cr}{C}
+\newcommand{\Data}{D}
+\newcommand{\Ab}{\bm{A}} 
+\newcommand{\ab}{\bm{a}}
+\newcommand{\adj}{\operatorname{adj}}
+\newcommand{\mb}{\bm{m}}
+\renewcommand{\paragraph}{\xhdr}
+\newcommand{\App}{{\overline{\Acal}}}
+% \newcommand{\prv}{{\Acal_{\text{Private}}}}
+\newcommand{\topk}{top-$K$}
+\newcommand{\qg}{\mathsf{g}}
+\newcommand{\cg}{\mathsf{G}}
+\newcommand{\prg}{\mathcal{G}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\gb}{\bm{g}}
+\newcommand{\rb}{\bm{r}}
+\newcommand{\ie}{\emph{i.e.}}
+\newcommand{\etc}{\emph{etc}}
+\newcommand{\ttest}{\text{Test}}
+\renewcommand{\ni}{\noindent}
+\newcommand{\pib}{\pi}
+\newcommand{\LN}{\textsc{LN}}
+
+\newcommand{\binset}{\{0,1\}^*}
+\newcommand{\ks}{\mathcal{K}\mathcal{S}}
+\DeclarePairedDelimiterX{\infdivx}[2]{(}{)}{%
+  #1\;\delimsize\|\;#2%
+}
+\newcommand{\kl}{D\infdivx}
+\newcommand{\inlinerect}{\raisebox{0.5pt}{\tikz{\node[draw,scale=0.4,rectangle](){};}}}
+\endinput

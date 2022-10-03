@@ -1,0 +1,127 @@
+\chapter{Lecture 1}
+\section{The Flow of Information}
+% \begin{figure}
+%     \centering
+
+
+% \end{figure}
+% \begin{tikzpicture}
+
+% % draw rectangle node
+% 	\node[draw,
+% 		minimum width=2cm,
+% 		minimum height=1cm,
+%             fill=green!50] at (0,0){Information Source};
+
+% % Change line color
+% 	\node[draw,
+%             fill=orange!50,
+% 		minimum width=2cm, 
+% 		minimum height=1cm,
+%             shape=circle] at (3,0) {Transmuter};
+
+% % Change filling color
+% 	\node[draw,
+% 		minimum width=2cm,
+% 		minimum height=1cm,
+%             fill=green!50] at (6,0){Channel};
+
+% % Change text color
+% 	\node[draw,
+% 		text=red,
+% 		minimum width=2cm, 
+% 		minimum height=1cm] at (3,-2) {Process 2};
+
+% \end{tikzpicture}
+
+\section{Source Coding}
+\begin{definition}
+Given an alphabet $\Ucal$ with $|\Ucal| < \infty$. A source code $c$ is a mapping from the alphabet to the set of all finite binary strings represented as $\binset = \{null, 0, ,1, 00, 01, 10, 11, 000, \dots\}$ \ie\ $c:\Ucal \to \binset$.
+\end{definition}
+\begin{eg}
+Consider $\Ucal = \{a,b,c,d,e\}$. Then we can have a $c:\Ucal \to \binset$ as
+$c(a) = 0,$ $c(b) = 0,$ $c(c) = null,$ $c(d) = 1,$ $c(e) = 010100$.
+\end{eg}
+\begin{definition}
+A code $c$ is called singular if $\exists u, v \in \Ucal$ s.t. $u\neq v$ but $c(u) = c(v)$.
+\end{definition}
+\begin{definition}
+A code $c$ is called non-singular or injective if it is not singular.
+\end{definition}
+\begin{eg}
+For the alphabet in the previous example, we can have an injective code as $c(a) = 0$, $c(b) = 00$, $c(c) = null$, $c(d) = 1$ and $c(e) = 010100$.
+\end{eg}
+\begin{definition}
+Given $c: \Ucal \to \binset$, we write the concatenation of the codes of two letters $u_1, u_2 \in \Ucal$ as $c(u_1)c(u_2)$. We further define
+\[c^2: \Ucal^2 \to \binset \text{ to be } c^2(u_1, u_2) = c(u_1)c(u_2)\]
+\[c^n: \Ucal^n \to \binset \text{ to be } c^n(u_1, \dots, u_n) = c(u_1)c(u_2)\dots c(u_n)\]
+\[c^*: \Ucal^* \to\binset \text{ to be } c^*(u_1,\dots,u_n) = c(u_1)c(u_2)\dots c(u_n)\]
+\end{definition}
+\begin{definition}
+A code $c:\Ucal\to\binset$ is called uniquely decodable if $c^*$ is injective, \ie\ if $u_1,\dots,u_n \neq v_1\dots,v_k$, then $c(u_1)\dots c(u_n) \neq c(v_1)\dots c(v_k)$.
+\end{definition}
+\begin{eg}
+With the same alphabet as before, we can have $c(a) = 0$, $c(b) = 10$, $c(c) = 110$, $c(d) = 1110$ and $c(e) = 1111$. This code is uniquely decodable and is called a prefix free code.
+\end{eg}
+\begin{definition}
+A code $c:\Ucal\to\binset$ is called prefix free if $\forall u,v \in \Ucal$ s.t $u\neq v$, $c(u)$ is not a prefix of $c(v)$.
+\end{definition}
+\begin{theorem}
+If a code $c$ is prefix free (p.f.), then it is uniquely decodable (u.d.).
+\end{theorem}
+\begin{proof}
+We prove the above theorem by contradiction. Consider there exists a code $c$ which is p.f. but not u.d and we have $u_1, \dots, u_n, v_1, \dots, v_k \in \Ucal$ such that $u_1, \dots, u_n \neq v_1, \dots, v_k$ and $c(u_1)\dots c(u_n) = c(v_1)\dots c(v_k)$. Traversing the code of the sequence of alphabets from the left, we immediately notice that if $\ell(u_1) > \ell(v_1)$ then $c(v_1)$ is a prefix of $c(u_1)$. Similarly if $\ell(u_1) < \ell(v_1)$, $c(u_1)$ is a prefix of $c(v_1)$. But since the code is prefix free, we arrive at a contradiction.
+\end{proof}
+\begin{definition}
+Given a code $c: \Ucal \to \binset$, we define the Kraft Sum
+\[\ks(c) = \sum_{u \in \Ucal} 2^{-\ell(u)}\] where $\ell(u) = \text{length}(c(u))$. In case of confusion, we subscript the length by the code, i.e $\ell_c(u) \equiv \ell(u) = \text{length}(c(u))$
+\end{definition}
+\begin{eg}
+Consider the code for the same alphabet as $c(a) = 0$, $c(b) = 1$, $c(c) = null$, $c(d) = 00$ and $c(e) = 010$. Then we have
+\[
+    \ks(c) = 2^{-1} + 2^{-1} + 2^0 + 2^{-2} + 2^{-2} = 2.375
+\]
+\end{eg}
+\begin{lemma}
+Suppose $c:\Ucal \to \binset$ and $d:\Vcal \to \binset$ are two codes, and denote $(c\times d): \Ucal \times \Vcal \to \binset$ as $(c\times d)(u,v) = c(u)d(v)$. Then 
+\[\ks(c\times d) = \ks(c)\ks(d)\]
+\end{lemma}
+\begin{proof}
+By definition, we have
+\begin{align*}
+    \ks(c\times d) &= \sum_{u,v} 2^{-\ell_{c\times d}((u,v))} = \sum_{u,v} 2^{-[\ell_c(u) + \ell_d(v)]} \\
+    &= \sum_{u,v} 2^{-\ell_c(u)} \times 2^{-\ell_d(v)} = \sum_u 2^{-\ell_c(u)} \sum_v 2^{-\ell_d(v)} = \ks(c)\ks(d)
+\end{align*}
+\end{proof}
+\begin{corollary}
+$\ks(c^n) = [\ks(c)]^n$
+\end{corollary}
+\begin{theorem}[Kraft's Inequalities]
+Suppose $c: \Ucal \to \binset$ is injective, then
+\[\ks(c) \leq \log_2(1+|\Ucal|)\]
+Suppose $c$ is uniquely decodable, then
+\[\ks(c) \leq 1\]
+Suppose $c$ is prefix free, then
+\[\ks(c) \leq 1\]
+\end{theorem}
+\begin{proof}
+Suppose that $c$ is injective, and let $|\Ucal| = k$ and $\Ucal = \{1, 2, \cdots, k\}$. To maximize the Kraft Sum, we put $c(1) = null$, $c(2) = 0$, $c(3) = 1$ and so on. Also, let $k = 1 + 2 + 4 + 8 + \cdots + 2^{m-1} + r$ where $0 \leq r < 2^m$. Then, we can write
+\[\ks(c) = 2 + 2 \times 2^{-1} + 2^2 \times 2^{-2} + \cdots + 2^{m-1}\times 2^{-(m-1)} + r \times 2^{-m} = m + r \cdot 2^{-m}\]
+Now, consider $\log_2(1+k) = \log_2(1 + 2^{m} - 1 + r) = \log_2(2^m + r)$. We can then write \[\log_2(1+k) \leq \log_2(2^m(1+r\cdot2^{-m})) = m + \log_2(1+r\cdot 2^{-m}) \]
+Notice that $r\cdot 2^{-m} \in [0,1)$ and using the fact that $\log_2(1+x) \geq x$ for $x\in[0,1]$, we get
+\[m + \log_2(1+r2^{-m}) \geq m + r\cdot2^{-m} = \ks(c)\]
+Having proved for $c$ being injective, we now show it for $c$ being uniquely decodable. First observe that $c$ is u.d. $\iff$ $c^*$ is injective $\implies \forall n,$ $c^n$ is injective. Hence, we can write
+\[
+[\ks(c)]^n = \ks(c^n) \leq \log_2(1+k^n)
+\]
+Now, notice that the LHS is exponentially growing in $\ks(c)$ while the RHS is linearly growing in $\ks(c)$. Since exponential growth cannot be dominated by linear growth, we notice that the term growing exponentially must be less than or equal to 1. Thus, we have $\ks(c) \leq 1$.
+
+\noindent
+Finally, since every prefix free code is uniquely decodable, the last inequality follows immediately.
+\end{proof}
+\begin{remark}
+Although the Kraft Sum for uniquely decodable codes is less than or equal to 1, the reverse doesn't hold true. Take the code $\Ucal = \{a,b,c\}$ and the code $c$ to be $c(a) = 0$, $c(b) = 00$ and $c(c) = 00$. It is clear that $c$ is not uniquely decodable, but --
+\[
+\ks(c) = 2^{-1} + 2^{-2} + 2^{-2}  = 1 \leq 1
+\]
+\end{remark}
