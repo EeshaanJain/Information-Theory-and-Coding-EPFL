@@ -1,0 +1,116 @@
+\chapter{Lecture 4}
+\section{Entropy, Conditional Entropy and Mutual Information}
+Recall that for a random variable $U \in \Ucal$, we define
+\[ H(U) \triangleq \sum_{u \in \Ucal} p(u) \log_2 \frac{1}{p(u)} = \EE\bigg[\log_2\frac{1}{p(u)}\bigg] \text{ where } p(u) = \Pr[U=u] = p_U(u)\]
+If $U$ and $V$ are random variables with $p(u,v) = \Pr[U=u,V=v] = p_{UV}(uv)$ then \[H(UV) \triangleq \sum_{u,v} p(uv) \log_2 \frac{1}{p(uv)} = \EE\bigg[\log_2 \frac{1}{p(uv)}\bigg] \]
+and in general for $U_1, \dots, U_n$, we have
+\[H(U_1,\dots,U_n) = \sum_{u_1,\dots,u_n} p(u_1,\dots,u_n) \log_2\frac{1}{p(u_1,\dots,u_n)}\]
+\begin{remark}
+From now, we denote $u^n \triangleq (u_1\dots u_n)$ as a sequence of letters and $U^n = (U_1\dots U_n)$ as a random vector.
+\end{remark}
+Now consider the case where we have some information between the encoder and decoder, denoted by the random variable $V$. 
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[node distance=1.5cm]
+\node[state] (s1) {};
+\node[left of=s1] (start) {};
+\node[right of=s1] (mid) {};
+\node[state, right of=mid] (s2) {};
+\node[right of=s2] (end) {};
+\node[below of=mid] (v) {V};
+
+\path (start) edge["$u$"] (s1);
+\draw (v) edge[bend left]  (s1);
+
+\draw (v) edge[bend right]  (s2);
+\draw (s1) edge["bits"]  (mid);
+\draw (s2) edge["$u$"] (end);
+
+\end{tikzpicture}
+\end{figure}
+For each possible $v \in V$, we can design a source code for $\Ucal$. Recall that $p(u|v) = \Pr[U=u | V=v] = \frac{p_{UV}(uv)}{p_V(v)}$. For a given $v \in V$, we see that
+\[ H(U|V=v) = \sum_{u\in\Ucal} p(u|v) \log \frac{1}{p(u|v)} \] and this denotes the minimum number of bits per letter to describe $\Ucal$. The overall expected bits per letter is then
+\[H(U|V) = \sum_{v \in V} p_V(v) H(U|V=v)\]
+\begin{remark}
+Possible cognitive dissonance: Consider a function $f:U\to V$. We have that $f(U)$ is a random variable, but $H(U)$ is a number. Similar to $\EE[U]$, $H(U)$ is a number. Now, consider $\EE[U|V]$ - this is a random variable. But still $H(U|V)$ is a number.
+\end{remark}
+Now, the conditional entropy of $U$ given $V$ is given as
+\[H(U|V) = \sum_{u,v} p(uv) \log_2 \frac{1}{p(u|v)} = \EE\bigg[\log_2 \frac{1}{p(u|v)}\bigg] \]
+\begin{remark}
+\[\EE\bigg[\log_2 \frac{p_U(u)}{p_V(u)}\bigg] = \sum_{u\in \Ucal} p_U(u)\frac{p_U(u)}{p_V(u)} = \kl{p_U}{p_V} \]
+\[EE\bigg[\frac{p_U(u)}{p_V(v)}\bigg] = H(V) - H(U)\]
+\end{remark}
+\begin{theorem}[Chain Rule]
+\[H(UV) = H(V) + H(U|V) = H(U) + H(V|U)\]
+\[ H(U^n) = H(U_1) + H(U_2|U_1) + \dots + H(U_n|U^{n-1}) \]
+\end{theorem}
+\begin{proof}
+\begin{align*}
+p_{UV}(uv) &= p_V(v) p_{U|V}(u|v) \\
+\log_2 p_{UV}(uv) &= \log_2 p_V(v) + \log_2 p_{U|V}(u|v) \\
+\implies H(UV) &= H(V) + H(U|V)  
+\end{align*}
+For the general case, 
+\begin{align*}
+    p_{(U_1,\dots,U_n)}(u_1,\dots,u_n) &= p_{U_1}(u_1)p_{U_2|U_1}(u_2|u_1)\dots p_{U_n|U_1\dots U_{n-1}}(u_n|u_1\dots u_{n-1}) \\
+    &= \prod_{i=1}^n p_{U_i|U^{-1}}(u_i|u^{i-1}) \\
+    \implies \log_2 p(u^n) &= \sum_o \log_2 p(u_i|u^{i-1}) \\
+    \implies H(U^n) &= H(U_1) + H(U_2|U_1) + \dots + H(U_n | U^{n-1})
+\end{align*}
+\end{proof}
+Based on some source coding representation, we denote the value of $V$ in representing $U$ as $H(U) - H(U|V)$. We notice that
+\begin{align*}
+    H(U) - H(U|V) &= H(U) + H(V) - H(UV) = H(V) - H(V|U)
+\end{align*}
+is symmetric and $U$ and $V$. 
+\begin{definition}
+We define the Mutual Information between two random variables $U$ and $V$ as
+\[I(U;V) = H(U) + H(V) - H(UV) = H(U) - H(U|V) = H(V) - H(V|U) = I(V;U)\]
+Similarly, we define the Conditional Mutual Information of the two given $W$ as
+\begin{align*}
+    I(U;V|W) &= H(U|W) + H(V|W) - H(UV|W) \\
+    &= H(U|W) - H(U|VW) = H(V|W) - H(V|UW) \\
+    &= H(UW) + H(VW) - H(UVW) - H(W)
+\end{align*}
+\end{definition}
+\begin{theorem}
+$I(U;V|W) \geq 0$ and equality holds if and only if $\forall\;u,v,w: p(uv|w) = p(u|w)p(v|w)$ whenever $p(w) > 0$.
+\end{theorem}
+\begin{proof}
+\begin{align*}
+    I(U;V|W) &= H(U|W) + H(V|W) - H(UV|W) \\
+    &= \EE\bigg[\log_2 \frac{p(uv|w)}{p(u|w)p(v|w)}\bigg] \\
+    &= \sum_w \sum_u \sum_v p(uvw) \log_2 \frac{p(uv|w)}{p(u|w)p(v|w)} \\
+    &= \sum_w p(w)\sum_{u,v} p(uv|w) \log_2 \frac{p(uv|w)}{p(u|w)p(v|w)} \\
+    &= \sum_w p(w) \kl{p(uv|w)}{p(u|w)p(v|w)} \geq 0
+\end{align*}
+For equality, $p(uv|w) = p(u|w)p(v|w)$, which means that $U$ and $V$ are conditional independent given $W$ or $U-W-V$ form a markov chain.
+\end{proof}
+\begin{corollary}
+$I(U;V) \geq 0$ and equlaity holds if and only if $U$ and $V$ are independent.
+\end{corollary}
+\begin{corollary}
+$H(U|V) \leq H(U)$ and equality holds if and only if $U$ and $V$ are independent. This means that conditioning will never increase entropy. Similarly, $H(U|VW) \leq H(U|W)$ and equality holds if and only if $U-W-V$.
+\end{corollary}
+\begin{theorem}[Chain rule for Mutual Information]
+\[I(U^n;V) = I(U_1;V) + I(U_2;V|U_1) + \dots + I(U_n;V|U^{n-1}) \]
+\[ I(U^n; V|W) = \sum_{i=1}^n I(U_i;V | U^{i-1}|W) ]\]
+\end{theorem}
+\begin{proof}
+\begin{align*}
+I(U^n,V) &= H(U^n) - H(U^n|V) \\
+&= H(U_1) + H(U_2|U_1) + \dots + H(U_n|U^{n-1}) - H(U_1|V) - H(U_2|U,V) - \dots \\
+&= I(U_1;V) + I(U_2;V|U_1) + \dots + I(U_n;V|U^{n-1})
+\end{align*}
+On the similar lines, the second statement can be proven.
+\end{proof}
+\begin{theorem}[Data Processing Inequality]
+Suppose $U-W-V$, then $I(U;W) \geq I(U;V)$ and equality holds if and only if $U-V-W$, and $I(V;W) \geq I(U;V)$ and equality holds if and only if $V-U-W$.
+\end{theorem}
+\begin{proof}
+\begin{align*}
+I(U;VW) = I(U;V) + I(U;W|V) &= I(U;W) + I(U;V|W) \\
+\implies I(U;V) + I(U;W|V) &= I(U;W) \text{ since } I(U;V|W) = 0 \\
+\implies I(U;V) &\leq I(U;W)
+\end{align*}
+\end{proof}

@@ -1,0 +1,37 @@
+\chapter{Lecture 5}
+\section{Entropy Inequalities}
+\begin{theorem}
+$H(U) \geq 0$ with equality if and only if $\exists\; u_0 \in \Ucal$ s.t. $\Pr[U=u_0]=1$, i.e $U$ isn't random. Also, $H(U) \leq \log_2 |\Ucal|$ with equality if and only if $U$ follows a uniform distribution, i.e for any $u_0 \in \Ucal$, $\Pr[U=u_0] = \frac{1}{|\Ucal|}$
+\end{theorem}
+\begin{proof}
+The first part is easy to prove, since $p(u) \geq 0$ and $\frac{1}{p(u)} \geq 1 \implies \log_2 \frac{1}{p(u)} \geq 0$. Thus, $H(U) \geq 0$. \\
+Now, we claim that $H(U)$ is maximal if $U$ is a uniform distribution on $\Ucal$. \\
+We prove this by contradiction - consider that $U$ is not uniform, then $\exists\; (u_0, u_1) \in \Ucal$ s.t. $p(u_0) < p(u_1)$. Now, consider a random variable $\widetilde U$ s.t.
+\[ 
+p_{\widetilde U}(\widetilde u) = \begin{cases}
+\frac{1}{2}[p(u_0) + p(u_1)] & u = u_0 \\
+\frac{1}{2}[p(u_0) + p(u_1)] & u = u_1 \\
+p(u)  &\text{else}
+\end{cases}
+\]
+Now, note that since $p(u_0) < p(u_1)$, we have that $2p(u_0) < p(u_0) + p(u_1) < 2p(u_1)$. Thus,
+\begin{align*}
+    H(\widetilde U) - H(U) &= (p(u_0) + p(u_1)) \log_2 \bigg(\frac{2}{p(u_0) + p(u_1)}\bigg) - p(u_0)\log\frac{1}{p(u_0)} - p(u_1) \log\frac{1}{p(u_1)} \\
+    &= p(u_0)\log_2 \frac{2p(u_0)}{p(u_0) + p(u_1)} + p(u_1)\log_2 \frac{2p(u_1)}{p(u_0) + p(u_1)} \\
+    &\geq p(u_0) \log_2 \frac{2p(u_0)}{2p(u_0)} + p(u_1)\log_2 \frac{2p(u_1)}{2p(u_0)} \\
+    &= p(u_1) \log_2 \frac{p(u_1)}{p(u_0)} > 0
+\end{align*}
+Thus, we found a distribution which has a higher entropy than $U$, but this is a contradiction. Thus, the only maximizer of $H(U)$ is the uniform distribution.
+\end{proof}
+\begin{theorem}
+Suppose $U$ and $V$ have the same alphabet $\Ucal$ and let $\delta= \Pr[u \neq v]$. Then, 
+\[ H(U|V) \leq h_2(\delta) + \delta \log_2(|\Ucal| - 1)\]
+\end{theorem}
+\begin{proof}
+Let's define $W$ as the indicator variable $\mathbb{1}[U\neq V]$. Now,
+\begin{align*}
+    H(UW|V) &= H(W|V) + H(U|WV) \\
+    &\leq H(W) + H(U|VWV) = h_2(\delta) + H(U|WV)
+\end{align*}
+Now, to show that $H(U|WV) \leq \delta \log(|\Ucal| - 1)$
+\end{proof}

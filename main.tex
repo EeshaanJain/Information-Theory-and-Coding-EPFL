@@ -1,8 +1,19 @@
 \documentclass[a4paper]{report}
+\usepackage{bbold}
 \usepackage[a4paper, total={6in, 10in}]{geometry}
 \input{./preamble.tex}
 % \usepackage{cmbright}
-
+\tikzset{node distance=2.5cm, % Minimum distance between two nodes. Change if necessary.
+         every state/.style={ % Sets the properties for each state
+           semithick,
+           fill=gray!10},
+         initial text={},     % No label on start arrow
+         double distance=4pt, % Adjust appearance of accept states
+         every edge/.style={  % Sets the properties for each transition
+         draw,
+           ->,>=stealth',     % Makes edges directed with bold arrowheads
+           auto,
+           semithick}}
 \usepackage{faktor}
 \usepackage{def}
 \usepackage{pgffor}
