@@ -3,17 +3,7 @@
 \usepackage[a4paper, total={6in, 10in}]{geometry}
 \input{./preamble.tex}
 % \usepackage{cmbright}
-\tikzset{node distance=2.5cm, % Minimum distance between two nodes. Change if necessary.
-         every state/.style={ % Sets the properties for each state
-           semithick,
-           fill=gray!10},
-         initial text={},     % No label on start arrow
-         double distance=4pt, % Adjust appearance of accept states
-         every edge/.style={  % Sets the properties for each transition
-         draw,
-           ->,>=stealth',     % Makes edges directed with bold arrowheads
-           auto,
-           semithick}}
+
 \usepackage{faktor}
 \usepackage{def}
 \usepackage{pgffor}
@@ -36,8 +26,44 @@
 \DeclareMathOperator{\im}{Im}
 
 \title{Information Theory and Coding}
+\tikzset{node distance=2.5cm, % Minimum distance between two nodes. Change if necessary.
+         every state/.style={ % Sets the properties for each state
+           semithick,
+           fill=gray!10},
+         initial text={},     % No label on start arrow
+         double distance=4pt, % Adjust appearance of accept states
+         every edge/.style={  % Sets the properties for each transition
+         draw,
+           ->,>=stealth',     % Makes edges directed with bold arrowheads
+           auto,
+           semithick}}
+           
+\usepackage{afterpage}
+\usetikzlibrary{fadings}
+          
 \begin{document}
-    \maketitle
+\DeclareFixedFont{\titlefont}{T1}{ppl}{b}{}{0.7in}
+\DeclareFixedFont{\subtitlefont}{T1}{ppl}{b}{}{0.4in}
+\afterpage{\restoregeometry}
+\newgeometry{left=1in, right=1in,top=1in, bottom=0in}
+\definecolor{mytan}{HTML}{F6D5A8}
+\pagecolor{mytan}\afterpage{\nopagecolor}
+
+\thispagestyle{empty}
+\begin{flushright}
+\titlefont Information Theory and Coding\\
+\subtitlefont EPFL, Fall 2022
+\end{flushright}
+\vfill
+\begin{center}
+\begin{tikzpicture}
+
+\node[scope fading=north, inner sep=0pt, outer sep=0pt]{
+ \makebox[\textwidth]{\includegraphics[width=\paperwidth]{wave.jpg}}
+};
+\end{tikzpicture}
+\end{center}
+\newgeometry{left=1.15in, right=1.15in,top=0.85in, bottom=0.85in}
     \tableofcontents
     % start lessons
     \foreach \lecno in {1,2,...,20}{%
