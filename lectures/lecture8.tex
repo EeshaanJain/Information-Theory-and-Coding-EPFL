@@ -1,0 +1,100 @@
+\chapter{Lecture 8}
+\section{Universal Data Compression}
+Consider an alphabet $\Ucal$, with $|\Ucal| < \infty$ and an infinite sequence $u_1 u_2, \dots$, $u_i \in \Ucal$. We consider the adversaries to our (yet to be described) universal method as a Finite State Machine which is invertible. In essence, a finite state machine can be described by
+\begin{itemize}
+    \item A finite state set of states $\Scal$, with $|\Scal| = s$, and a starting point $s_0 \in \Scal$
+    \item A function \texttt{next-state}: $\Scal \times \Ucal \to \Scal$ such that $s_{i+1} = \texttt{next-state}(s_i, u_{i+1})$ for $i=0,1,\dots$
+    \item A function \texttt{output}: $\Scal \times \Ucal \to \binset$ scuh that $y_{i+1} = \texttt{output}(s_i, u_{i+1})$
+\end{itemize}
+\begin{eg}
+Consider $\Ucal = \{a,b\}$ and $\Scal = \{0,1,2\}$ with $s_0 = 0$
+\begin{figure}[H]
+\centering
+    \scalebox{0.8}{
+    \begin{tikzpicture}
+        \node[state] (1) {$1$};
+        \node[state, below left of=1] (0) {$0$};
+        \node[state, right of=0] (2) {$2$};
+        \draw (0) edge[above] node[sloped]{$a/null$} (1);
+        %\draw (1) edge[below, bend right, left=0.3] node{$\epsilon$} (3);
+        \draw (1) edge[loop above] node[auto]{$a/0$} (1);
+        \draw (1) edge[loop right] node[auto]{$b/1$} (1);
+        \draw (0) edge[below] node[sloped]{$b/null$} (2);
+        \draw (2) edge[loop below] node{$a/1$} (2);
+        \draw (2) edge[loop right] node{$b/0$} (2);
+\end{tikzpicture}
+}
+\end{figure}
+\noindent Here, we notice that the output doesn't have any information of the first letter, and it is not invertible, i.e given the output $000\dots$, the input can be $aaa\dots$ or $bbb\dots$. But if we can look athe final state of the machine, we can identify the input. Thus the internal memory of the machine keeps the information, and the machine is called \textit{information losselss}. Thus together with the final state, we can determine the input given the output.
+\end{eg}
+\begin{remark}
+\textit{Notation:} If $z \in \Scal$, $w \in \Ucal^*$, $w = v_1v_2\dots v_m$, then \texttt{next-state}$(z,w)$ is the final state of the machine after reading the entire $w$. Say $w = v_1v_2$, then
+\[\texttt{next-state}(z,w) = \texttt{next-state}(\texttt{next-state}(z,v_1), v_2)\]
+and, \texttt{output}$(z,w)$ is the concatenation of the outputs while reading $w$, thus
+\[\texttt{output}(z,v_1v_2) = \texttt{output}(z,v_1) \texttt{output}(\texttt{next-state}(z,v_1), v_2) \]
+\end{remark}
+For an information lossless machine - for any state $z \in \Scal$ and any $w,w' \in \Ucal^*$, with $w \neq w'$ then either
+\begin{enumerate}
+    \item \texttt{output}$(z,w) \neq \texttt{output}(z,w')$ [output isn't same] \textbf{OR }
+    \item \texttt{next-state}$(z,w) \neq \texttt{next-state}(z,w')$ [different state]
+\end{enumerate}
+\begin{lemma}
+Suppose $u_1\dots u_n = w_1\dots w_m$, $u_i \in \Ucal, w_j \in \Ucal^*$. Suppose $w_i \neq w_j$ when $i \neq j$ (i.e it is a distinct parsing of $u_1\dots u_n$ into words $w_1 \dots w_m$), then for any non-negative integer $k$ - 
+\[ n \geq k\Big[m - |\Ucal|^k\Big]\]
+\end{lemma}
+\begin{proof}
+Consider $\Ucal^*$ contains $1$ word of length 0, $|\Ucal|$ words of length $1$, \dots and $|\Ucal|^{k-1}$ words of length $k-1$. From the sum of geometric progressions, we know that $\sum_{i=0}^{k-1} |\Ucal|^i < |\Ucal|^k$. Among the $m$ $w$'s, at least $m - |\Ucal|^l$ must be longer than $k$ or more and thus total length of these must be greater than $k\Big[m - |\Ucal|^k\Big]$
+\end{proof}
+\begin{corollary}
+Suppose $m^*(u^n)$ is the largest $m$ such that $u^n = w_1\dots w_m$ with distinct $w$'s. Then,
+\[ \lim_{n\to\infty} \frac{m^*(u^n)}{n} = 0 \text{ i.e }m^*\text{ grows sublinearly}\]
+\end{corollary}
+\begin{proof}
+We have $m^*(u^n) < \frac{n}{k} + |\Ucal|^k$ for any non-negative $k$. Divide by $n$ and take the limit to get $0 \leq \lim_{n\to\infty} \frac{1m^*(u^n)}{n} \leq \frac{1}{k}$. But since this is true for all $k$, we can take $k$ to be very large.
+\end{proof}
+\begin{eg}
+For $\Ucal = \{a,b\}$, we have $m^*(a) = 2$, $m^*(ab) = 3$, $m^*(aa) = 2$, $m^*(aaa) = 3$.
+\end{eg}
+\begin{remark}
+Say we bound $k$ such that $|\Ucal|^k = \frac{m}{2}$. This means that $n \geq \frac{m}{2}\log_{|\Ucal|}\frac{m}{2}$. Moreover, if we take $|\Ucal|^k = 0.001m$, then $n \approx m\log_{|\Ucal|}m$ and thus $n$ grows superlinearly in $m$.
+\end{remark}
+\begin{definition}
+A collection $y_1\dots y_m$ of binary words $y_i \in \binset$ is said to be $k$-distinct if $\forall\; t \in \binset$, $|\{i: y_i = t\}| \leq k$.
+\end{definition}
+\begin{eg}
+$(null, 0, 1, 00, 01, 10, 11)$ is 1-distinct and $(null, null, 0, 00, 11, 000)$ is 2-distinct.
+\end{eg}
+\begin{lemma}
+Suppose $(y_1, \dots, y_m)$ is $k$-distinct. If we write $m = k + k\cdot 2 + k \cdot 2^2 + \dots + k \cdot 2^{j-1} + r$ for $0 \leq r < k\cdot 2^j$, then
+\[\sum_{i=1}^m \text{length}(y_i) \geq \sum_{i=0}^{j-1} k \cdot i \cdot 2^i + j\cdot r \]
+\end{lemma}
+\begin{proof}
+We have $\binset = \{null, 0, 1, 00, 01, 10, 11, \dots\}$ and thus there are $2^i$ binary words of length $i$. Rewrite $m$ as $k(2^j -1 ) + r$ and using $\sum_{i=0}^{j-1} i 2^i = (j-2)2^j + 2$ to get the required inequality (since this is the best case possible for $k$-distinct words).
+\end{proof}
+\begin{corollary}
+If $(y_1, \dots, y_m)$ are $k$-distinct words, then 
+\[\sum_{i=1}^m \text{length}(y_i) \geq m \log \frac{m}{8k} \]
+\end{corollary}
+\begin{proof}
+From the previous lemma, we have
+\begin{align*}
+    \sum_{i=1}^m \text{length}(y_i) &\geq k(j-2)2^j + 2k + rj = (j-2)m + kj + 2r \geq (j-2)m
+\end{align*}
+Now, since $0 \leq r < k \cdot 2^j$, we have $m < k (2^j-1)+k\cdot 2^j < k\cdot 2^{j+1}$. This means that $\frac{m}{8k} < 2^{j-2}$ and thus $(j-2) > \log_2\frac{m}{8k}$ and thus $m(j-2) > m\log_2 \frac{m}{8k}$
+\end{proof}
+\begin{theorem}
+Suppose we have a $s$-state information lossless finite state machine an we feed it $u_1\dots u_n = w_1\dots w_m$ where they are a distinct parsing, then
+\[\text{length}(\texttt{output}(s_0, u^n)) \geq m\log_2 \frac{m}{8s^2} \]
+\end{theorem}
+\begin{proof}
+Consider the states (with $z_0 = s_0$)
+\begin{table}[H]
+\centering
+\begin{tabular}{ccccccccccc}
+            & $z_0$ &       & $z_1$ &       & $z_2$ &       & $\dots$ & $z\_\{m-1\}$ &       & $z_m$ \\
+Input $u$ = &       & $w_1$ &       & $w_2$ &       & $w_3$ & $\dots$ &              & $w_m$ &       \\
+Output =    &       & $y_1$ &       & $y_2$ &       & $y_3$ & $\dots$ &              & $y_m$ &      
+\end{tabular}
+\end{table}
+\noindent We claim that $(y_1, \dots, y_m)$ is $s^2$-distinct. We can see that this is true since if it isn't $s^2$-distinct, then we contradict the fact that the machine is information lossless. Consider $\{y_\alpha = t: \alpha \in A\}$, with $|A| > s^2$ (since $z_iz_j$ pairs are $s^2$ in number). Thus, we have $\alpha, \beta \in A$ such that $(z_{\alpha-1}, z_\alpha) = (z_{\beta-1}, z_\beta)$, and $(y_\alpha = y_\beta)$ but this contradicts since $w_\alpha\neq w_\beta$ (due to distinct-parsing).
+\end{proof}

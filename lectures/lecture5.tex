@@ -33,5 +33,81 @@ Let's define $W$ as the indicator variable $\mathbb{1}[U\neq V]$. Now,
     H(UW|V) &= H(W|V) + H(U|WV) \\
     &\leq H(W) + H(U|VWV) = h_2(\delta) + H(U|WV)
 \end{align*}
-Now, to show that $H(U|WV) \leq \delta \log(|\Ucal| - 1)$
+Now, to show that $H(U|WV) \leq \delta \log(|\Ucal| - 1)$ - notice that $H(U|WV=wv) = 0$ if $w = 0$ else $H(U|WV=wv) \leq \log(|\Ucal| - 1)$ if $w = 1$.
+\begin{align*}
+    H(U|VW) &= \sum_{wv} p_{WV}(w,v)H(U|VW=vw) \\
+    &\leq\sum_v p(1,v) \log(|\Ucal| - 1)  \\
+    &= \PP(w=1)\log(|\Ucal|-1) = \delta \log(|\Ucal| - 1)
+\end{align*}
 \end{proof}
+\begin{eg}
+Suppose $\Ucal = \Vcal = \mathcal{W}$ and $\PP(U=0) = \PP(U=1) = 0.5$ and $\PP(V=0) = \PP(V=1) = 0.5$. Consider 
+\[W = U \oplus V = \begin{cases}
+0 & \text{if } uv = 00 \text{ or } 11 \\
+1 & \text{else }
+\end{cases}\]
+Then,
+\begin{enumerate}
+    \item $H(U) = H(V) = H(W) = 1$
+    \item $H(UV) = H(U) + H(V) - I(U;V) = 1 + 1 - 0 = 2$
+    \item For $H(UW)$, consider when $U = 0$ then $W = 0 \oplus V = V$ and $\PP(W) = (0.5, 0.5)$ and if $U = 1$ then $W = 1 \oplus V = \neg V$ and $\PP(W)$ is the same as before. Thus, the distribution of $W$ doesn't change when conditioned on $U$ and $\PP(W=w|U=0) = \PP(W=w|U=1) \implies U$ and $W$ are independent and $H(UW) = H(VW) = 2$ 
+    \item $H(U|V) = H(UV) - H(V) = 2 - 1 = 1$
+    \item $H(U|VW) = 0$ since given $W$ and $V$, $U$ is deterministic
+    \item $I(U;W) = I(V;W) = I(U;V) = 0$
+    \item $I(U;VW) = I(U;W) + I(U;V|W) = H(U|W) + H(V|W) - H(UV|W) = 1 + 1 - 1 = 1$
+\end{enumerate}
+\end{eg}
+\begin{theorem}
+$2H(UVW) \leq H(UV) + H(VW) + H(WU)$
+\end{theorem}
+\begin{proof}
+Rewrite the equation as
+\begin{align*}
+    H(UVW) - H(UV) + H(UVW) - H(VW) \overset{?}{\leq} H(WU) 
+\end{align*}
+The first two terms in the RHS collapse to $H(W|UV)$ and the next two collapse to $H(U|WV)$. We know that conditioning decreases entropy, and thus $H(W|UV) \leq H(W)$ and $H(U|WV) \leq H(U|W)$. Thus, we have
+\[LHS \leq H(W) + H(U|W) = H(UW)\]
+\end{proof}
+\begin{theorem}
+Consider $n$ points in a 3-dimensional space. Consider shining light from each axis $(u,v,w)$ and let the number of corresponding projections of points on the planes be $n_{uw}, n_{vw}$ and $n_{uv}$. Then,
+\[ n_{uv} n_{vw} n_{uw} \geq n^2 \]
+\end{theorem}
+\begin{proof}
+Let the random variables $(UVW)$ be uniformly distributed on the $n$ points. Thus, $H(UVW) = \log_2n$. Now, $H(UV) \leq \log n_{uv}$ since, $UV$ cannot have entropy more than what it would have if $UV$ was uniformly distributed. Thus by the above inequality,
+\[2\log_2 n \leq \log_2 n_{uv} \log_2 n_{vw} \log_2 n_{wu} \implies n^2 \leq n_{uv} n_{vw} n_{uw}\]
+\end{proof}
+\begin{definition}
+Suppose $U_1, U_2, \dots$ is a stochastic process. We define its \textit{Entropy Rate} as
+\[ \Hcal(U^\infty) = \lim_{n\to\infty} \frac{1}{n}H(U^n) \text{ if it exists}\]
+\end{definition}
+\begin{eg}
+Suppose $U_1, U_2, \dots$ are i.i.d, then 
+\[ \Hcal = \lim_{n\to\infty} \frac{1}{n} H(U^n) = \lim_{n\to\infty} \frac{1}{n} [H(U_1) + H(U_2|U_1) + \cdots + H(U_n|U^{n-1}) = H(U_1)\]
+\end{eg}
+\begin{eg}
+Consider the markov chain given, 
+    \begin{center}
+    \begin{tikzpicture}[node distance=2cm,->,>=latex,auto,
+      every edge/.append style={thick}]
+      \node[state] (0) {$0$};
+      \node[state] (1) [right of=0] {$1$};  
+      \path (0) edge[loop left]  node{$1-\alpha$} (0)
+                edge[bend left]  node{$\alpha$}   (1)
+            (1) edge[loop right] node{$1-\alpha$}  (1)
+                edge[bend left] node{$\alpha$}     (0);
+    \end{tikzpicture}
+    \end{center}
+Consider the initial (step 1) probability $U_1$ of being in state 0 and state 1 to be uniform, i.e $U_1 = 0$ w.p $0.5$ and $1$ w.p $0.5$. Now, $U_2$ is given by
+\[
+U_2 = \begin{cases}
+0 & \frac{1}{2} (1-\alpha) + \frac{\alpha}{2} = \frac{1}{2} \\
+1 & \frac{\alpha}{2} + \frac{1}{2}(1-\alpha) = \frac{1}{2}
+\end{cases}
+\]
+We see that being in any state is uniform, i.e $U_1 = U_2 = U_3 = U_4 = \dots$. \\Now, $H(U_2 | U_1 = 0) = h_2(\alpha)$ and $H(U_2|U_1 = 1) = h_2(\alpha) \implies H(U_2|U_1) = h_2(\alpha)$. Similarly, we can state that $H(U_{n+1} | U_n) = h_2(\alpha)$.
+\begin{align*} 
+H(U_n) &= H(U_1) + H(U_2|U_1) + \cdots + H(U_n|U^{n-1}) \\
+H(U_n) &= H(U_1) + H(U_2|U_1) + \cdots + H(U_n|U_{n-1}) \text { (Markov Process: previous state dependency)} \\
+\implies \Hcal &= \lim_{n\to\infty} \frac{1}{n} H(U_1) + \frac{(n-1)}{n} h_2(\alpha) = h_2(\alpha)
+\end{align*}
+\end{eg}

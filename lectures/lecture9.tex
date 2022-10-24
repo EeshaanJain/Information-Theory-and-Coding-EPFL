@@ -1,0 +1,57 @@
+\chapter{Lecture 9}
+\section{Information Losslessness}
+\begin{theorem}
+For any finite state information lossless machine, 
+\[\lim_{n\to\infty} \frac{1}{n}\text{length}(\texttt{output}(u^n)) \geq \lim_{n\to\infty} \frac{1}{n} m^*(u_n)\log m^*(u^n) \]
+\end{theorem}
+\begin{proof}
+Divide both sides by $n$ and take limit in the previous theorem (note that since the theorem is true for all $m$, it is also true for $m^*(u^n)$).
+\end{proof}
+\section{Lempel-Ziv Universal Data Compression Method (1978)}
+\begin{enumerate}
+    \item[(0)] Let $\mathcal{D} = \Ucal$ be the initial dictionary and let $i = 0$ (initial letters read so far)
+    \item[(1)] Represent a word in $\mathcal{D}$ using $\lceil \log_2|\mathcal{D}|\rceil$ bits. Read $u_{i+1} \dots u_{i+\ell}$ so that $w = (u_{i+1}\dots u_{i+\ell}) \in \mathcal{D}$. Output the representation of $w$
+    \item[(2)] Remove $w$ from $\mathcal{D}$ and insert $(wu), u \in \Ucal$ into $\mathcal{D}$ and repeat (1)
+\end{enumerate} 
+\begin{eg}
+Take $\mathcal{D} = \{a,b,c\}$ with representations $(00, 01, 10)$. Consider the input sequence as $abaabcca\dots$. 
+\begin{enumerate}
+    \item Word read: $a$, $\mathcal{D} = \{aa, ab, ac, b, c\}$, Output: (00)
+    \item Word read: $b$, $\mathcal{D} = \{aa, ab, ac, ba, bb, bc, c\}$, Output: 00(011)
+    \item Word read: $aa$, $\mathcal{D} = \{aaa, aab, aac, ab, ac, ba, bb, bc, c\}$, Output: 00011(000)
+\end{enumerate}
+The decoder works in the same way - It first reads $000$ and decides that we replaced $a$, and expands dictionary in the same way.
+\end{eg}
+If we analyze LZW, then consider $u_1\dots u_n = w_1\dots w_m$ which is the LZ-parsing. Observe that it is a distinct-parsing since we never add a word back to the dictionary. We can calculate the number of produced bits as
+\[n^{LZ}_{\text{bits}} = \lceil \log_2( |\Ucal| )\rceil + \lceil \log_2( |\Ucal| + |\Ucal|-1 )\rceil + \cdots + \lceil \log_2( |\Ucal + (m-1)(|\Ucal| - 1) )\rceil \]
+We can bound this as
+\begin{align*}
+    n^{LZ}_{\text{bits}} &\leq m \lceil \log_2(|\Ucal + (m-1)(|\Ucal| - 1))\rceil \leq m \lceil\log_2(m|\Ucal|) \rceil \\
+    &\leq m [\log_2(m|\Ucal|) + 1] = m\log_2 (2m|\Ucal|)
+\end{align*}
+\begin{theorem}
+\[ \lim_{n\to\infty} \frac{1}{n} \text{length}(\texttt{output}_{LZ}(u^n)) \leq \lim_{n\to\infty} \frac{1}{n} m^*(u^n)\log m^*(u_n)\]
+\end{theorem}
+\begin{proof}
+Divide both sides of the above inequality by $n$ and take limit. 
+\end{proof}
+From this, we conclude that $LZ$ beats any information lossless machine. 
+\begin{remark}
+Note that in FSM we ignored $-\frac{m^*(u^n)}{n}\log 8s^2$ and in LZW we ignored $\frac{m^*(u^n)}{n}\log 2|\Ucal|$. The difference is $\frac{m^*(u^n)}{n}\log 16s^2|\Ucal|$ and this favors $FSM$. In general, we should have $n$ large enough so that we overcome this advantage. In practice, LZ works much better than the pessimistic bound we put on it but in case we know about the data in prior with what we're dealing, LZ might be worse.
+\end{remark}
+\begin{remark}
+Suppose $U_1U_2\dots$ is a stationary process, then
+    \[\lim_{n\to\infty}\EE\bigg[\frac{1}{n}\text{length}(\texttt{output}_{LZ}(U^n))\bigg] \leq \frac{1}{k}[H(U^k) + 1] \]
+    We can achieve the right bound by a FSM where $K$ is the number of blocks of sequence (we can implement the FSM for doing Huffman coding for $U^k$). Thus the limit is $\leq \Hcal$. Now, since it is impossible to beat the entropy rate in lossless compression, it must be an equality and thus LZ universally compresses stationary sources with no penalty.
+\end{remark}
+\section{Universality}
+Suppose we have an alphabet $\Ucal$ and $\Pcal$ is a class/set of probability distributions on $\Ucal$. Now, say we design a source code $c: \Ucal \to \binset$. Let $q(u) = 2^{-\ell_c(u)}$ (note that whenever we design a code, we inherently define a probability distribution on it). \\Suppose $U$ is a random variable with distribution $p \in \Pcal$. Then, we can write $\EE[\ell_c(u)] = H(U)$ as the penalty of $c$ w.r.t any adversary which knows $p$. Since this quantity is equal to $\kl pq$, we write this as the regret. We can associate to any code design the maximal regret given as $\max_{p \in \Pcal} \kl pq$. A sensible way to design the code is to minimize this, and thus $\min_q \max_{p\in\Pcal} \kl pq$. \\
+Now, consider an alphabet $\Ucal^n$ and $c_{\widetilde{LZ}}(u^n) \leadsto q^n_{LZ}$ on $\Ucal^n$ (where $\widetilde{LZ}$ is a modified version to include termination. We have seen that 
+\[\lim_{n\to\infty} \max{p \in \Pcal_n} \frac{1}{n}  \kl {p^n}{q^n_{LZ}} = 0 \] where $p^n$ is the restriction of $p$ to first $n$ letters and $\Pcal_n$ is a stationary process. Moreover, we can interpret this as
+\begin{align*}
+    \frac{1}{n} \kl {p^n}{q^n_{LZ}} &= \frac{1}{n} \sum_{u^n} p^n(u^n) \log\bigg[ \frac{p(u_1) p(u_2|u_1)\dots p(u_n|u^{n-1})}{q(u_1)q(u_2|u_1)\dots q(u_n|u^{n-1})}\bigg] \\
+    &= \frac1n \sum_{i=1}^n \sum_{u^n} p^n(u^n) \log\bigg[\frac{p(u_i|u^{-1})}{q(u_i|u^{i-1})}\bigg] =  \frac1n \sum_{i=1}^n \sum_{u^i} p(u^i) \log\bigg[\frac{p(u_i|u^{-1})}{q(u_i|u^{i-1})}\bigg] \\
+    &=  \frac1n \sum_{i=1}^n \sum_{u^{i-1}} p(u^{i-1}) \sum_{u^i} p(u_i|u^{i-1}) \log\bigg[\frac{p(u_i|u^{-1})}{q(u_i|u^{i-1})}\bigg] \\
+    &= \frac{1}{n} \underbrace{\sum_{i=1}^n} \underbrace{\sum_{u^{i-1}} p(u^{i-1})} \kl {p(u_i|u^{i-1}}{q(u_i|u^{i-1})}
+\end{align*}
+The first term represents the average over time, and the second one represents the average over the past letters. Now, since the limit goes to $0$ as $n \uparrow$, for most $i$'s and for a high $p^i(\cdot)$ probability set of $u^{i-1}$'s, $\kl {p(u_i|u^{i-1}}{q(u_i|u^{i-1})}$ is small and thus we conclude that LZ is a \textbf{\textit{learning algorithm}}, and for stationary sources, it was learning the values (since $\kl \cdot \cdot \downarrow$).

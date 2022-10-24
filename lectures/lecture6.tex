@@ -1,0 +1,125 @@
+\chapter{Lecture 6}
+\section{Stationary Processes and Entropy}
+\begin{definition}
+A process $U_1, U_2, \dots$ is a stationary process if 
+\begin{align*}\forall\;k \geq 0, &\forall\; n, \forall; (u_1, \dots, u_n)\;:\; \\ &\PP[((U_{k+1}, \dots U_{k+n}) = (u_1, \dots, u_n)] = \PP[(U_1, \dots, U_n) = (u_1, \dots, u_n)]\end{align*}
+\end{definition}
+\begin{lemma}[Cesaro's Lemma]
+If $x_n \to x$ (i.e if the sequence $x_n$ converges with the limit $x$), then the sequence $y_n \triangleq \frac{\sum_{i=1}^n x_i}{n} \to x$
+\end{lemma}
+\begin{proof}
+$x_n \to x \equiv \forall \; \epsilon > 0\; \exists \;n(\epsilon) \; | \; \forall \; n \geq n(\epsilon) : |x_n - x| < \epsilon$
+\begin{align*}
+|y_n - x| &= \bigg| \frac{(x_1 - x) + (x_2 - x) + \cdots + (x_n - x)}{n}\bigg| \\
+& \leq \frac{|x_1 - x| + |x_2 - x| + \cdots + |x_n - x|}{n} \\
+&< \frac{\sum_{i=1}^{n(\epsilon) - 1}|x_i - x| + n\epsilon}{n} \\
+&= \epsilon + \frac{1}{n} \sum_{i=1}^{n(\epsilon) - 1} |x_i - x| \leq 2 \epsilon \text{ if $n$ is large enough}
+\end{align*}
+Thus, $y_n \to x$
+\end{proof}
+\begin{theorem}
+Suppose $U_1, \dots, U_n$ is a stationary process, then
+\begin{itemize}
+    \item $\lim_n \frac{1}{n} H(U^n)$ exists and is equal to $\lim_n H(U_n|U^{n-1})$
+    \item Moreover, both $\frac{1}{n} H(U^n)$ and $H(U_n | U^{n-1})$ are monotone non-increasing sequences
+\end{itemize}
+\end{theorem}
+\begin{proof}
+Let $K_n = H(U_n|U^{n-1})$ and $H_n = \frac{1}{n}H(U^n)$. By the chain rule, we can see that
+\[H_n = \frac{1}{n} [K_1 + \cdots + K_n] \]
+Also, since conditioning decreases entropy, we have that 
+\begin{align*}
+    K_{n+1} = H(U_{n+1} | U^n) &= H(U_{n+1} | U_{n}, \dots, U_2, U_1) \\
+    &\leq H(U_{n+1} | U_n,\dots,U_2)
+\end{align*}
+Due to stationarity - we have $H(U_{n+1}| U_n, \dots, U_2) = H(U_{n}|U_{n-1} \dots U_1) \implies K_{n+1} \leq K_n$ \\
+Now, 
+\begin{align*}
+    n(n+1) (H_n - H_{n+1}) &= (n+1)(K_1 + \cdots + K_n) - n(K_1 + \cdots K_{n+1}) \\
+    &= (K_1 + \cdots + K_n) - nK_{n+1} \\
+    &= (K_1 - K_{n+1}) + \cdots + (K_n - K_{n+1}) \\
+    &\geq 0
+\end{align*}
+Thus, $H_n \geq H_{n+1}$, and since both are monontonically non-increasing, the limit exists.\\
+Further, using Cesaro's Lemma, $K_n$ and $H_n$ have the same limit
+\end{proof}
+\begin{theorem}
+Suppose $U_1, U_2, \dots, U_n$ is stationary with entropy rate $\Hcal$ and let $\epsilon >0 $. Then, there exists a data compression method that uses less than $H+\epsilon$ bits per letter on the average to describe the stationary process.
+\end{theorem}
+\begin{proof}
+First, we pick $n$ large enough so that $\frac{H(U_1, \dots, U_n) + 1}{n} < \Hcal + \epsilon $. This is possible since $\frac{1}{n} [H(U_1,\dots,U_n) + 1] \to \Hcal$. Now, we design a Huffmann code $C_n$ for $(U_1, \dots, U_n)$ - $C_n: \Ucal^n \to \binset$ and use it as follows - 
+\[\underbrace{U_1, \dots, U_n}_{\substack{\downarrow \\ C_n \\ \text{bits}}},\underbrace{U_{n+1}, \dots, U_{2n}}_{\substack{\downarrow \\ C_n \\ \text{bits}}},\underbrace{U_{2n+1}, \dots, U_{3n}}_{\substack{\downarrow \\ C_{n} \\ \text{bits}}} \dots \]
+Since $C_n$ is Huffman, we have $\EE[\# bits] \leq H(U_1, \dots, U_n) + 1$ \\
+\[\frac{\EE[\# bits]}{n} \leq \frac{H(U_1, \dots, U_n) + 1}{n} < \Hcal + \epsilon \]
+Since each of the blocks uses less than $\Hcal + \epsilon$ bits, the entire scheme uses less than $\Hcal + \epsilon$ bits.
+\end{proof}
+\section{Compression of IID Sources and Typicality Inequalities}
+\begin{definition}
+Suppose $U_1, U_2, \dots$ are IID random variables. Given a distribution $p$ on $\Ucal$, $n$ and $\epsilon > 0$ we define the set of \textit{typical} sequences as
+\[ T(n,p,\epsilon) = \Big\{ u^n \in \Ucal^n, \forall_{u\in U}\; p(u)(1-\epsilon) \leq \frac{1}{n} \sum_{i=1}^n \mathbb{1}\{u_i = u\} \leq p(u)(1+\epsilon)\Big\}\]
+\end{definition}
+Suppose $U_1 \sim q$ and $u^n \in T(n,p,\epsilon)$. Let us examine $\PP[U^n = u^n]$
+\begin{align*}
+\PP[U^n = u^n] &= \prod_{i=1}^n \PP[U_i=u_i] \quad (\because \text{ independence}) \\
+&= \prod_{i=1}^n q(u_i) = \prod_{u \in \Ucal} q(u) ^{\sum_{i=1}^n \mathbb{1} (u_i = u)}
+\end{align*}
+Note that $\sum_{i=1}^n \mathbb{1}(U_i = u) \approx n p(u) (1 \pm \epsilon)$.
+\[ \implies \prod_{u \in \Ucal} q(u) ^{np(u)(1+\epsilon)} \leq \PP[U^n = u^n] \leq \prod_{u \in \Ucal} q(u) ^{np(u)(1-\epsilon)}\]
+\begin{remark}
+\[\prod_{u \in \Ucal} q(u)^{np(u)(1-\epsilon)} = 2^{-(1-\epsilon)n \sum_u p(u)\log_2\frac{1}{q(u)}} \]
+\[\sum_{u \in Ucal} p(u) \log_2 \frac{1}{q(u)} = H(p) + \kl{p}{q}\]
+\end{remark}
+\begin{theorem}
+Suppose $U_1, U_2, \dots$ are i.i.d and $U_i \sim q$, and $u^n \in T(n,p,\epsilon)$, then
+\[2^{n(1+\epsilon)[H(p) + \kl pq]} \leq \PP[U^n = u^n] \leq 2^{-n(1-\epsilon)[H(p) + \kl pq]} \]
+We can also write this as $\PP[U^n = u^n] \mathrel{\dot\sim} 2^{-n[H(p) + \kl pq]}$
+\end{theorem}
+\begin{proof}
+Follows from the explanation above along with the remark.
+\end{proof}
+\begin{corollary}
+Taking $p = q$ in the above theorem, we can write
+\[\PP[U^n = u^n] \mathrel{\dot\sim} 2^{-n H(U)} \]
+\end{corollary}
+\begin{theorem}
+\[|T(n,p,\epsilon)| \leq 2^{n(1+\epsilon)H(p)}\]
+\end{theorem}
+\begin{proof}
+Let $U_1, U_2, \dots$ be i.i.d and $\sim p$. Then
+\begin{align*}
+    \PP[U^n \in T(n,p,\epsilon)] = \sum_{u^n \in T(n,p,\epsilon)} \PP[U^n = u^n] &\leq 1 \\
+    \implies \sum_{u^n \in T(n,p,\epsilon)} 2^{-(1+\epsilon) n H(p)} &\leq 1 \\
+    \implies |T| 2^{-n(1+\epsilon) H(p)} \leq 1 \\
+    \implies |T| &\leq 2^{n(1+\epsilon)H(p)}
+\end{align*}
+\end{proof}
+\begin{corollary}
+Suppose $U_1, U_2, \dots, U_n$ are i.i.d and $\sim q$, then
+\[ \PP[U^n \in T(n,p,\epsilon) \leq 2^{-n[\kl pq - \epsilon[H(p) + \kl pq]}\]
+\end{corollary}
+\begin{proof}
+\begin{align*}
+    \PP[U^n \in T] = \sum_{u^n \in T} \PP[U^n = u^n] & \leq \sum_{u^n \in T} 2^{-n(1-\epsilon) [H(p) + \kl pq]} \\
+    &= |T| 2^{-n(1-\epsilon)} [H(p) + \kl pq] \\
+    &\leq 2^{n(1+\epsilon) H(p) - n(1-\epsilon) H(p) - n(1-\epsilon) \kl pq} \\
+    &= 2^{-n[\kl pq - \epsilon[2H(p) + \kl pq]} \\
+    &\approx 2^{-n \kl pq}
+\end{align*}
+\end{proof}
+\begin{theorem}
+Suppose $U_1, \dots$ are i.i.d and $\sim p$, $\epsilon > 0$ then $\PP[U^n \in T(n,p,\epsilon)] \to 1$ as n increases, and in particular for $n$ large enough
+we have $\PP[U^n \in T(n,p,\epsilon)] \geq 1 - \epsilon$
+\end{theorem}
+\begin{proof}
+We consider the probability $\PP[U^n \notin T(n,p,\epsilon)]$ 
+\begin{align*}
+\PP[U^n \notin T(n,p,\epsilon)] &= \PP\bigg[\exists\; u \in \Ucal: \Big|\frac{1}{n} \sum_{i=1}^n \mathbb{1}\{U_i = u\} - p(u)\Big| > \epsilon p(u) \bigg] \\
+&\leq \sum_{u \in \Ucal} \PP\bigg[\Big|\frac{1}{n} \sum_{i=1}^n \mathbb{1}\{U_i = u\} - p(u)\Big| > \epsilon p(u) \bigg] 
+\end{align*}
+We examine the event $\Big|\frac{1}{n} \sum_{i=1}^n \mathbb{1}\{U_i = u\} - p(u)\Big| > \epsilon p(u)$ and denote $X_i = \mathbb{1}\{U_i = u\}$, and we see that $X_i$ are independent since $U_i$ are independent, and $\EE[X_i] = p(u)$. Thus, by the law of large numbers, 
+\[\PP\bigg[\Big|\frac{1}{n} \sum_{i=1}^n \mathbb{1}\{U_i = u\} - p(u)\Big| > \epsilon p(u)\bigg] \to 0 \text{ as $n$ gets large}\]
+Thus, for $n > n_0(u, \epsilon)$
+\[\PP\bigg[\Big|\frac{1}{n} \sum_{i=1}^n \mathbb{1}\{U_i = u\} - p(u)\Big| > \epsilon p(u)\bigg] \leq \frac{\epsilon}{|\Ucal|} \]
+So taking $n > \max\{n_0(u, \epsilon), u \in \Ucal\}$, we have that 
+\[\sum_{u \in \Ucal} \PP\bigg(\Big|\frac{1}{n} \sum_{i=1}^n \mathbb{1}\{U_i = u\} - p(u)\Big| > \epsilon p(u)\bigg) < \epsilon \implies \PP[U^n \notin T(n,p,\epsilon)] < \epsilon \]
+\end{proof}

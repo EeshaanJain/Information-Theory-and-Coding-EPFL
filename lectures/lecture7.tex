@@ -1,0 +1,95 @@
+\tikzstyle{block} = [draw, fill=blue!20, rectangle, 
+    minimum height=3em, minimum width=6em]
+\tikzstyle{sum} = [draw, fill=blue!20, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+\chapter{Lecture 7}
+\section{Typicality Continued}
+\begin{eg}
+Consider $\Ucal = \{a, ,b, c\}$ with probabilities $(0.5, 0.25, 0.25)$. We can show that $H(p) = 1.5$. Then, $\Ucal^n$ has cardinality $3^n$ and $T(n, p, \epsilon)$ has cardinality of approximately $2^{nH(p)} = 2^{1.5n} \approx 2.8^n$. As $n$ increases, the ratio of the cardinalities decreases, and if $U^n$ is i.i.d and $\sim p$, then it falls in the decreasing region w.p 1
+\end{eg}
+\begin{corollary}
+$|T(n, p, \epsilon)| > (1-\epsilon) 2^{nH(p)(1-\epsilon)}$ for $n$ large enough
+\end{corollary}
+\begin{proof}
+\begin{align*}
+    (1-\epsilon) &< \PP[U^n \in T] = \sum_{u^n \in T} \PP[U^n = u^n] \\
+    &\leq \sum_{u^n \in T} 2^{-n H(p)(1-\epsilon)} = |T| 2^{-nH(p)(1-\epsilon)} \\
+    \implies |T| &> (1-\epsilon)2^{nH(p)(1-\epsilon)}
+\end{align*}
+\end{proof}
+\begin{corollary}
+If $U_1, U_2, \dots$ are i.i.d and $\sim q$, for $n$ large enough we have
+\[\PP[U^n \in T(n, p, \epsilon)] \geq (1-\epsilon) 2^{-n[\kl{p}{q} + \epsilon(2H(p) + D(\kl{p}{q})]} \]
+\end{corollary}
+\begin{proof}
+\begin{align*}
+    \PP[U^n \in T(n, p, \epsilon)] = \sum_{u^n \in T} \PP[U^n = u^n] &\geq \sum_{U^n \in T} 2^{-n(1+\epsilon)[\kl pq + H(p)]} \\
+    &= |T| 2^{-n(1+\epsilon)[\kl pq + H(p)]} \\
+    &\geq (1-\epsilon) 2^{nH(p) (1-\epsilon)} 2^{-n(1+\epsilon)[\kl pq + H(p)]} \\
+    &= 2^{-n[\kl{p}{q} + \epsilon(2H(p) + D(\kl{p}{q})]}
+\end{align*}
+\end{proof}
+Suppose we replace $\Ucal$ by $\Ucal \times \Vcal$, $U by (U, V)$ and $p_U by p_{UV}$, we see that 
+\[T(n, p_{UV}, \epsilon) = \{(u_1, v_1), \dots , (u_n, v_n) \} \equiv (u^n, v^n) \; \forall \; u \in \Ucal, v \in \Vcal \]
+Also, the bounds on the indicator extends as
+\[n(1-\epsilon) p_{UV}(u, v) \leq \sum \mathbb{1}\{U_i = u, V_i = v\} \leq n(1+\epsilon) p_{UV}(u, v)\]
+\begin{lemma}
+\[(u^n, v^n) \in T(n, p_{UV}, \epsilon) \implies u^n \in T(n, p_U, \epsilon)\]
+\end{lemma}
+\begin{proof}
+Observe that $\mathbb{1}\{u_i = u\} = \sum_{v \in \Vcal} \mathbb{1} \{ u_i = u, v_i = v\}$. Consequently, $$\frac{1}{n} \sum_{i=1}^n \mathbb{1}\{u_i = u\} = \sum_{v \in \Vcal} \frac{1}{n} \sum_{i=1}^n \mathbb{1}\{u_i = u, v_i = v\}$$
+\[ \sum_{v \in \Vcal} \sum_{v \in \Vcal} (1-\epsilon) p_{UV}(u, v) = (1-\epsilon) p_U(u)\]
+\end{proof}
+\begin{remark}
+Note that the reverse doesn't hold true.
+\end{remark}
+As a special case, suppose we are given $p_{UV}$ and we consider a pair $(\widetilde U, \widetilde V)$ of random variables such that $\widetilde U$ and $\widetilde V$  are independent and $\widetilde U \sim p_U$ and $\widetilde V \sim p_V$. Thus, $(\widetilde U, \widetilde V) \sim p_U p_V$. When we ask -
+\begin{align*}
+    \PP(\widetilde U, \widetilde V) \in T(n, p_{UV}, \epsilon) &\approx 2^{-n(\kl{p_{UV}}{p_Up_V} \pm \epsilon[\dots]}
+\end{align*}
+But now, notice that $\kl{p_{UV}}{p_Up_V} = I(U;V)$, thus it is related to how difficult it is for the pair to pretend they came from a joint distribution when they are independent. 
+\section{Application: Lossy Coding}
+Consider $p_{UV}$ on binary sequences $\binset \times \binset$ with 
+\[p(00) = 0.45,\quad p(01) = 0.05,\quad p(10) = 0.05,\quad p(11)=0.45 \]
+Say we generate $M$ binary sequences of length $n$ ahead of time from $p_V$, thus
+\[M \;\underbrace{\begin{bmatrix}
+0 & 1 & 0 & \dots \\
+\dots &\dots & \dots & \dots \\
+\vdots & \ddots & \ddots & \vdots
+\end{bmatrix}}_{n} \triangleq \begin{matrix}
+V^n(1) \\ \vdots \\ V^n(M)
+\end{matrix}\]
+Now, we observe a $(U_1, \dots, U_n)$ data i.i.d $\sim p_U$. Let's search the table of there exists as $V^n(i)$ for which $(U^n, V^n(i)) \in T(n, p_{UV}, \epsilon)$. Note that for the above probability distribution, $I(U;V) \approx 0.52$ and we take $M = 2^{nR}$ where $R > I(U;V)$. We can describe $i$ with $\log_2 M = nR$ bits.
+
+\begin{figure}[h]
+\centering
+% The block diagram code is probably more verbose than necessary
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % We start by placing the blocks
+    \node [sum, name=input, pin={[pinstyle]below:$n$ fair bits}, node distance=3cm] {$U^n$};
+    \node [block, right of=input] (encoder) {Encoder};
+    \node [block, right of=encoder,
+            node distance=5cm] (decoder) {Decoder};
+    \node [sum, right of=decoder, pin={[pinstyle]below: $n$ bits typical with $U^n$}, node distance=2.5cm] (output) {$V^n(i)$};
+    % We draw an edge between the controller and system block to 
+    % calculate the coordinate u. We need it to place the measurement block. 
+    \draw [->] (encoder) -- node[name=u] {\parbox{3cm}{\centering $nR \approx 0.53n$ bits \\ describing $i$}} (decoder);
+
+
+    % Once the nodes are placed, connecting them is easy. 
+    \draw [draw,->] (input) -- node {} (encoder);
+    \draw [->] (decoder) -- node {}(output);
+\end{tikzpicture}
+\end{figure}
+We see that with only around $50\%$ of the bits, we can reach 90\% accuracy (since 0.45 + 0.45 = 0.90). In a really naive scheme, we send 90\% of the bits, and in a lesser naive scheme, we send 80\% of the bits and guess randomly to get 90\% accuracy, but here we only need to send 50\% of the information. The only overhead is the one-time transfer of the probability table.
+\section{Application: Almost Lossless Data Compression with Fixed Length Binary Representations}
+Given $p_U$, fix $\epsilon > 0$ and pick $n$ large enough such that 
+\[\PP(U_1\dots U_n \in T(n, p, \epsilon)) > 1-\epsilon \]
+where $U_1 \dots U_n$ is i.i.d $\sim p_U$. Since $|T(n, p_U, \epsilon)| \leq 2^{nH(p)(1+\epsilon)}$, we can assign binary sequences of length $k = \lceil nH(p)(1+\epsilon)\rceil$ to represent uniquely each of these sequences (elements of $T(n, p_U, \epsilon)$). The data compression system outputs $U^n$ if $U^n \in T(n,p,\epsilon)$ else it outputs a sequence of $k$ 0s.
+
+Recovery of $U^n$ from the $k$ bits is exact as long as $U^n \in T$, bit since $U^n \in T$ w.p more than $1-\epsilon$, we are fine. \\
+The efficiency of the system (bits/letter) is given as 
+\[ \frac{\text{bits}}{\text{letter}} = \frac{k}{n} < \frac{nH(1+\epsilon)H(p) + 1}{n} = (1+\epsilon)H(U) + \frac{1}{n} \approx H(U)\]
