@@ -1,0 +1,57 @@
+\chapter{Lecture 11}
+We want to call $\Hcal \frac{k}{n}$ the bitrate since $\Hcal k$ is the entropy of $U_1, \dots, U_k$ and division by $n$ denotes the time taken. Hence, $\Hcal \frac{k}{n} = \frac{\text{Info sent}}{\text{Time taken}} = R$.\\
+In any system, if $\Hcal\Big(1-\frac{C}{R}\Big) = \alpha > 0$, then the symbol error rate satisfies $h_2(p) + p\log(|\Ucal|-1) \geq \alpha$. In particular, $p \geq p_0(\alpha)$. Thus, there is a lower bound on the number of errors.
+\section{Positive counterpart}
+If $u_1, u_2,$ \dots go to a data compressor (input is $k\Hcal$ bits if $\Ucal^k$ is the input), and the data compressor outs bits $b_1, \dots b_L$ then these can be decoded.
+\begin{eg}
+Consider a BSC(p) with flip probability $p$. Then,
+\begin{align*}
+    C(\text{BSC}(p)) &= \max_{p_X} I(X;Y) \\
+    &= \max_{p_X} [H(Y) - H(Y|X)] 
+\end{align*}
+The second term is $h_2(p)$ and the first term ismax when $p_X$ is uniform as that makes the output uniform. Thus, $C$(BSC$(p)) = 1 - h_2(p)$. Thus, at $p=0$ or $1$, we can send the correct or false bit, while at $p=1/2$ we don't need to send as the channel is random anyway.
+\end{eg}
+\begin{eg}
+Consider the Binary Erasure Channel, with erasure probability $p$. The output has symbols $0, e, 1$ and if we construct a channel in concatenation with this, where the error symbol goes to $0$ or $1$ uniformly, then the entire thing is a BSC($p/2$). Thus, data processing inequality tells us that $C(\text{BEC}(p)) \geq C(\text{BSC}(p/2))$. Now
+\begin{align*}
+    \max_{p_X} I(X;Y) &= \max_{p_X} H(Y) - H(Y|X) \\
+    &= \max_{p_X} H(X) - H(X|Y)
+\end{align*}
+Note that $H(Y|X=0) = h_2(p)$ and $H(Y|X=1) = h_2(p)$. Thus $H(Y|X) = h_2(p)$. Since $p$ is fixed, we cannot get a uniform distribution on the middle i.e $1/3, 1/3, 1/3$ for $0,e,1$. The next best is when $p_X$ is uniform and the middle has distribution $(1-p)/2, p, (1-p)/2$ for $0,e,1$. Thus,
+\[C(P_{X|Y}) = H\bigg(\frac{1-p}2, p, \frac{1-p}2\bigg) - h_2(p) = 1-p\]
+An easier way to show this is to write $I(X;Y) = H(X) - H(X|Y)$ and show that this can be written as $H(X)[1-p]$.
+\end{eg}
+\section{Capacity as an optimization problem}
+\begin{definition}
+A set $S \subseteq \RR^d$ is said to be convex if $\forall\;x,y\in S$, $\forall \lambda \in [0,1]$: $\lambda x + (1-\lambda) y \in S$.
+\end{definition}
+\begin{definition}
+    Suppose $S \subseteq \RR^d$ is convex (concave) and we have a function $f: S \to \RR$. We say that f is convex $\bigcup$ (concave $\bigcap$) if
+    \[\forall\;x,y\in S \text{ and } \lambda \in [0,1] f(\lambda x + (1-\lambda)y)) \leq (\geq) \lambda f(x) + (1-\lambda)f(y)\]
+\end{definition}
+\begin{definition}
+    Suppose $\Xcal$ is a finite alphabet and $\Xcal = {1,\dots, k}$, then a probability distribution $p$ on $\Xcal$ can be represented as $(p_1, \dots, p_k) \in \RR^k$ with $p_i \geq 0$ and $\sum_i p_i = 1$. We define $\Scal_k = \{(p_1, \dots, p_k) \in \RR^k, \sum_i p_i = 1, p_i \geq 0\}$ as the $k$-simplex and we can see that it is a convex set.
+\end{definition}
+\begin{theorem}
+Suppose $f: \Scal_k \to \RR$ is a smooth function. If $p \in \Scal_k$ maximizes $f(p)$, then there exists $\lambda$ such that $\forall\; i \frac{\partial f}{\partial p_i} \leq \lambda$, equality when $p_i > 0$. (KKT Conditions)
+\end{theorem}
+\begin{proof}
+If $p$ is a maximizer then if we create a disturbance at positions $p_i \to p_i + \epsilon$ and $p_j \to p_j - \epsilon$ then $f(p_1, \dots, p_i +\epsilon, \dots, p_j-\epsilon, \dots p_k)$ is less than the maximizer for all $i,j$ such that $p_j > 0$ and $\epsilon$ small enough. Thus, disturbances around local maxima don't increase value. We can write
+\[f(p_1, \dots, p_i+\epsilon, \dots, p_j-\epsilon, \dots, p_k) = f(p_1,\dots,p_k) + \epsilon \frac{\partial f}{\partial p_i} - \epsilon \frac{\partial f}{\partial p_j} + \mathcal{O}(\epsilon^2)\]
+Thus, $ \frac{\partial f}{\partial p_i} \leq  \frac{\partial f}{\partial p_j}$ for every $i, j$ such that $p_j > 0$. \\
+In the set $(p_1, \dots, p_k)$, let $J = \{i: p_i > 0\}$. The for $i,j \in J$, $ \frac{\partial f}{\partial p_i} =  \frac{\partial f}{\partial p_j}$ as the above can be done for $p_i - \epsilon$ and $p_j + \epsilon$ too. Thus $\frac{\partial f}{\partial p_i}$ has the same value for $i \in J = \lambda$ and for $i \notin J$, we have $\frac{\partial f}{\partial p_i} \leq \lambda$.
+\end{proof}
+\begin{theorem}
+Suppose $f: \Scal_k \to \RR$ is concave ($\bigcap$), differentiable and suppose $p \in \Scal_k$ satisfies KKT. Then $\forall\; q \in \Scal_k$, $f(q) \leq f(p)$ i.e, $p$ is a maximizer of $f$.
+\end{theorem}
+\begin{proof}
+For $0 < \theta < 1$, consider $f((1-\theta)p + \theta q) = f(p + \theta(q-p)) \geq (1-\theta) f(p) + \theta f(q)$. \\
+In particular,
+\[f(q) \leq \frac{f(p+\theta(q-p)) - (1-\theta)f(p)}{\theta} = f(p) + \bigg\{\frac{f(p+\theta(q-p)) - f(p)}{\theta}\bigg\}\]
+We can take the limit as $\theta \to 0$ on both sides, and thus we get the derivative. Now,
+\begin{align*}
+    \sum_i (q_i - p_i) \frac{\partial f}{\partial p_i} &= \sum_{i\in J} [q_i-p_i] \frac{\partial f}{\partial p_i} + \sum_{i\notin J} q_i \frac{\partial f}{\partial p_i} \\
+    \implies \sum_i q_i\frac{\partial f}{\partial p_i} &\leq (q_i-p_i)\lambda \{p_i = 0\} \leq \sum_i (q_i-p_i)\lambda = 0
+\end{align*}
+Hence, $f(q) \leq f(p)$
+\end{proof}

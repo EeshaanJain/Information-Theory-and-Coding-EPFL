@@ -71,7 +71,7 @@ Note that $\sum_{i=1}^n \mathbb{1}(U_i = u) \approx n p(u) (1 \pm \epsilon)$.
 \end{remark}
 \begin{theorem}
 Suppose $U_1, U_2, \dots$ are i.i.d and $U_i \sim q$, and $u^n \in T(n,p,\epsilon)$, then
-\[2^{n(1+\epsilon)[H(p) + \kl pq]} \leq \PP[U^n = u^n] \leq 2^{-n(1-\epsilon)[H(p) + \kl pq]} \]
+\[2^{-n(1+\epsilon)[H(p) + \kl pq]} \leq \PP[U^n = u^n] \leq 2^{-n(1-\epsilon)[H(p) + \kl pq]} \]
 We can also write this as $\PP[U^n = u^n] \mathrel{\dot\sim} 2^{-n[H(p) + \kl pq]}$
 \end{theorem}
 \begin{proof}
@@ -95,7 +95,7 @@ Let $U_1, U_2, \dots$ be i.i.d and $\sim p$. Then
 \end{proof}
 \begin{corollary}
 Suppose $U_1, U_2, \dots, U_n$ are i.i.d and $\sim q$, then
-\[ \PP[U^n \in T(n,p,\epsilon) \leq 2^{-n[\kl pq - \epsilon[H(p) + \kl pq]}\]
+\[ \PP[U^n \in T(n,p,\epsilon)] \leq 2^{-n[\kl pq - \epsilon[H(p) + \kl pq]}\]
 \end{corollary}
 \begin{proof}
 \begin{align*}

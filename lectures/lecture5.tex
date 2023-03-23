@@ -31,7 +31,7 @@ Suppose $U$ and $V$ have the same alphabet $\Ucal$ and let $\delta= \Pr[u \neq v
 Let's define $W$ as the indicator variable $\mathbb{1}[U\neq V]$. Now,
 \begin{align*}
     H(UW|V) &= H(W|V) + H(U|WV) \\
-    &\leq H(W) + H(U|VWV) = h_2(\delta) + H(U|WV)
+    &\leq H(W) + H(U|WV) = h_2(\delta) + H(U|WV)
 \end{align*}
 Now, to show that $H(U|WV) \leq \delta \log(|\Ucal| - 1)$ - notice that $H(U|WV=wv) = 0$ if $w = 0$ else $H(U|WV=wv) \leq \log(|\Ucal| - 1)$ if $w = 1$.
 \begin{align*}

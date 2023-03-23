@@ -1,0 +1,86 @@
+\chapter{Lecture 12}
+\section{Capacity as an optimization problem (contd.)}
+\begin{theorem}
+Consider $I(X;Y) = f(p_X, p_{Y|X})$. Then $f$ is concave $\bigcap$ in $p_X$ and convex $\bigcup$ in $p_{Y|X}$.
+\end{theorem}
+\begin{proof}
+For the first, we need to show that $\lambda f(p_1, p_{Y|X}) + (1-\lambda)f(p_2, p_{Y|X}) \leq f(\lambda p_1 + (1-\lambda)p_2, p_{Y|X})$
+Take $(Z, X, Y)$ such that $Z \in \{1,2\}$ with $p(Z=1) = \lambda$. Thus 
+\[p(Z,X,Y) = p(Z) \left\{\!\begin{aligned}
+&p_1(X) &\text{ if } Z=1,\\[1ex]
+&p_2(X)&\text{ if } Z=2
+\end{aligned}\right\} p(Y|X)\]
+Thus, $Z - X - Y$. Hence, $f(\lambda p_1 + (1-\lambda)p_2, p_{Y|X}) = I(X;Y)$ and $\lambda f(p_1, p_{Y|X}) + (1-\lambda) f(p_2, p_{Y|X}) = I(X;Y|Z)$. Now, since $Z-X-Y$, we have $I(ZX;Y) = I(X;Y) = I(X;Z) + I(X;Y|Z) \geq I(X;Y|Z)$. \\
+For the second inequality, need to show that $I(X;Y|Z) = \lambda f(p_X, p_1) + (1-\lambda_f(p_X, p_2) \geq f(p_X, \lambda p_1 + (1-\lambda)p_2) = I(X;Y)$. For thus, construct $Z$ as before, and note that
+\[p(Z,X,Y) = p(Z)p(X)p(Y|XZ) = \begin{cases}
+p_1(Y|X) & Z = 1 \\
+p_2(Y|X) & Z = 2
+\end{cases}\]
+In this case, $p(X|Z) = p(X)$ while earlier $p(Y|XZ) = p(Y|X)$.
+\begin{align*}
+    I(X;YZ) &=I(X;Z) + I(X;Y|Z) = I(X;Y|Z) \\
+    &= I(X;Y) + I(X;Z|Y) \geq I(X;Y)
+\end{align*}
+\end{proof}
+Recall that $C(P_{Y|X}) = \max_{p_X} I(X;Y) = \max_{p_X} f(p_X, p_{Y|X})$. We know that this is a concave function maximization. Thus, KKT conditions are necessary and sufficient. To do so, we need to know $\frac{\partial f(p_X, p_{Y|X})}{\partial p_X(x)}$. \\
+\[I(X;Y) = \sum_y p_Y(y) \log\frac{1}{p_Y(y)} + \sum_xp_X(x) \sum_y p_{Y|X}(y|x)\log p_{Y|X}(y|x)\]
+We can transform the log to ln, and maximize it.
+\[\frac{\partial f(p_X, p_{Y|X})}{\partial p_X(x)} = \sum_y p_{Y|X}(y|x) \log \frac{p_{Y|X} (y|x)}{p_Y(y)} - 1\]
+Here $p_Y(y)$ depends on $p_X(x)$. \\
+KKT conditions say that 
+\[\sum_y p_{Y|X}(y|x)\log \frac{p_{Y|X} (y|x)}{p_Y(y)} \leq \lambda \;\forall\;x \quad (= \lambda \;\forall\;x:p_X(x) > 0)\]
+\begin{theorem}
+    Given a channel $P_{Y|X}$, a $p_X$ maximized $I(X;Y)$ if and only if $\exists \lambda$ s.t.
+    \[\sum_y p_{Y|X}(y|x)\log \frac{p_{Y|X} (y|x)}{p_Y(y)} \leq \lambda \;\forall\;x \quad (= \lambda \;\forall\;x:p_X(x) > 0)\]
+    Moreover, $\lambda = C(P_{Y|X})$
+\end{theorem}
+\begin{proof}
+We only need to show the moreover part. Notice that $p_X(x) \sum_y p(y|x) \log\frac{p(y|x)}{p(y)} = p(x) \lambda \;\forall\;x$. If we sum over $x$, the RHS is equal to $\lambda$ and the $LHS$ is equal to $I(X;Y)$. But since the $p_X(x)$ maximizes $I(X;Y)$, the LHS is $C(P_{Y|X})$.
+\end{proof}
+\begin{eg}
+Consider a $Z$-channel, s.t $p(0|0) = 1$ and $p(0|1) = p$. In this case, \\ $\lambda = \sum_y p(y|0) \log\frac{p(y|0)}{p(y)} = \sum_y p(y|1) \log\frac{p(y|1)}{p(y)}$, and $p_X(x) \neq 0 \; \forall \;x$. Hence, we have (since only $0\to0$ possibile),
+\begin{align*}
+\log \frac{1}{p_Y(0)} &= p \log \frac{p}{p_Y(0)} + (1-p) \log \frac{1-p}{p_Y(1)} \\
+\implies (1-p) \log \frac{p_Y(1)}{p_Y(0)} &= -h_2(p) \\
+\frac{p_Y(1)}{p_Y(0)} &= 2^{-\frac{h_2(p)}{1-p}}
+\end{align*}
+Hence, we find that
+\[p_Y(1) = \frac{2^{-\frac{h_2(p)}{1-p}}}{1 + 2^{-\frac{h_2(p)}{1-p}}}, \quad p_Y(0) = \frac{1}{1 + 2^{-\frac{h_2(p)}{1-p}}}\]
+Hence, $\lambda = \log \frac{1}{p_Y(0)} = C(Z-channel(p)) = \log_2 \bigg(1 + 2^{-\frac{h_2(p)}{1-p}}\bigg)$. \\
+We don't need to check if $p_X(x)$ exists or not, because KKT says it exists. Also, note that $p_Y(1) = p_X(1) \cdot [1-p]$
+\end{eg}
+\section{Channel Coding}
+\newcommand{\enc}{\text{enc}}
+\newcommand{\dec}{\text{dec}}
+We are given a stationary memoryless channel $P_{Y|X}$. We define an encoder as a function
+\[\enc: \{1, \dots, M\} \to \Xcal^n\] with $n$ as the block length and $\frac{1}{n} \log_2 M$ as the rate. We also define a decoder
+\[\dec: \Ycal^n \to \{1, \dots, M\}\]
+The decoder can also be viewed as
+\[\dec: \Ycal^n \times \underbrace{\Xcal^n \times \dots \Xcal^n}_M \to \{1, \dots, M\}\]
+So the decoder guesses that $\hat{m} = \dec(y^n, \enc(1), \dots, \enc(M))$ was the message the encoder is trying to send.
+\begin{eg}
+    The maximum likelihood decoder: Compute $p_{Y|X}(y^n | \enc(m))$ for $m = 1, \dots, M$ and set $\hat{m} = \underset{m}{\arg\max}(p_{Y|X}(y^n | \enc(m)))$
+\end{eg}
+\begin{eg}
+    Pick a threshold $\Theta$, check if there is a $m$ s.t., $p_{Y|X}(y^n|\enc(m)) > \Theta$. If there is only one such $m$, set $\hat{m} = m$ else set $\hat{m}$ uniformly random in $\{1, \dots, M\}$.
+\end{eg}
+\begin{eg}
+    Pick some join distribution $q_{XY} on \Xcal \times \Ycal$ and $\epsilon > 0$. Check if $\exists m$ s.t. $(\enc(m), y^n) \in T(n,q,\epsilon)$. If one such $m$ exists, set $\hat{m} = m$ else select $\hat{m}$ uniformly random in $\{1, \dots, M\}$.
+\end{eg}
+Given enc, dec (or just dec since enc is embedded in it), we define the error when $m$ is sent as
+\begin{align*}
+    p_{e,m} &= \sum_{y^n \in \Ycal^n} p_{Y|X}(y^n|\enc(m))\mathbb{1}\{\dec(y^n, \enc(1), \dots, \enc(M)) \neq m\} \\
+    &= \EE\big[\mathbb{1}\{\dec(y^n, \enc(1), \dots, \enc(M)) \neq m\}|m\text{ is sent}\big] \\
+    \overline{p_e} = \frac{1}{M} \sum_{m=1}^M p_{e,m} &= \EE\big[\mathbb{1}\{\dec(y^n, \enc(1), \dots, \enc(M)\} \neq k\big | k \text{ is uniform on} \{1, \dots, M\} \text{ and sent}]
+\end{align*}
+\begin{definition}
+Given a channel $P_{Y|X}$, we call a rate $R$ achievable, if $\forall \delta > 0$, we can find enc, dec with $\frac{\log M}{n} \geq R$ and $\overline{p_e} < \delta$.
+\end{definition}
+We now see a proving technique -- Say a player $P$ marks at most $1/3$ part of the circle forbidden (fb), and the player $Q$ has to place an equilateral triangle with no vertex in any of the forbidden zones. We prove that this is possible. The strategy is to pick vertex $A$ uniformly at random, and this determines $B$, $C$ too. The first way to prove this is,
+\begin{align*}
+    P(\{A (fb)\} \cup \{B (fb)\} \cup \{C (fb)\}) \leq 3P(\{A (fb)\}) < 3 \cdot \frac13 = 1
+\end{align*}
+Hence $P(A,B,C \text{ not forbidden}) > 0$.\\
+The second way to prove this is to notice that
+\[\EE[n_{\text{forbidden}}] = \EE[\mathbb{1}\{A(fb)\}+\mathbb{1}\{B(fb)\}+\mathbb{1}\{C(fb)\}] < 1 \]
+Since the number of vertices is an integer, we can conclude that the probability the number of forbidden vertices is 0, is positive.
